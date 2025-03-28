@@ -71,7 +71,7 @@ def price(message, from_callback = False):
         lele = ''
         for i in yr_data: 
             name, feed, quanity = i 
-            lele += "Наименование организации: " + str(name) + ", Название препарата: " + str(feed) + ", Количество: " + str(quanity) + "\n"
+            lele += "Наименование организации: " + str(name) + ", Название препарата: " + str(feed) + ", Общее количество: " + str(quanity) + "\n"
         
         connection.close()
         bot.send_message(message.chat.id,  lele)
@@ -195,7 +195,7 @@ def join_bd_yr(message):
     global information_yr, all_price, end_choice
     end_choice_1 = ''
     for i, e in end_choice.items():
-        end_choice_1 += i[3:] + ": " + str(e) + ','
+        end_choice_1 += i[3:] + ", количество:  " + str(e) 
 
     information_yr = message.text.strip()
     connection = sqlite3.connect('users_staff_all.sql')
@@ -205,21 +205,20 @@ def join_bd_yr(message):
     c.close()
     connection.close()
     print('инфа добавляется')
-    bot.send_message(message.chat.id, 'хотите увидеть ваши заказы?')
-    bot.register_next_step_handler(message, show_yr)
-def show_yr(message):
-    print('эта залупа вызывается')
-    if message.text == 'да':
-        connection = sqlite3.connect('users_staff_all.sql')
-        c = connection.cursor()
-        c.execute("SELECT * FROM  users_all")
-        yr_data = c.fetchall()
-        illi = "" 
-        for i in yr_data:
-             illi += str(i) 
-        connection.close()
-        bot.send_message(message.chat.id, illi)
-        print("а сюда походу не доставляется")
+
+# def show_yr(message):
+#     print('эта залупа вызывается')
+#     if message.text == 'да':
+#         connection = sqlite3.connect('users_staff_all.sql')
+#         c = connection.cursor()
+#         c.execute("SELECT * FROM  users_all")
+#         yr_data = c.fetchall()
+#         illi = "" 
+#         for i in yr_data:
+#              illi += str(i) 
+#         connection.close()
+#         bot.send_message(message.chat.id, illi)
+#         print("а сюда походу не доставляется")
 #добавление в базу данных физ лица
 def join_bd_fiz(message):
     print(f"Received data for юр. лицо: {message.text}")  
@@ -232,22 +231,20 @@ def join_bd_fiz(message):
     connection.commit()
     c.close()
     connection.close()
-    bot.send_message(message.chat.id, 'хотите увидеть ваши заказы?')
-    bot.register_next_step_handler(message, show_fiz)
 
-def show_fiz(message):
-    print('эта залупа вызывается')
-    if message.text == 'да':
-        connection = sqlite3.connect('users_staff_all.sql')
-        c = connection.cursor()
-        c.execute("SELECT * FROM users_fiz")
-        yr_data = c.fetchall()
-        illi = "" 
-        for i in yr_data:
-             illi += str(i) 
-        connection.close()
-        bot.send_message(message.chat.id, illi)
-        print("а сюда походу не доставляется")
+# def show_fiz(message):
+#     print('эта залупа вызывается')
+#     if message.text == 'да':
+#         connection = sqlite3.connect('users_staff_all.sql')
+#         c = connection.cursor()
+#         c.execute("SELECT * FROM users_fiz")
+#         yr_data = c.fetchall()
+#         illi = "" 
+#         for i in yr_data:
+#              illi += str(i) 
+#         connection.close()
+#         bot.send_message(message.chat.id, illi)
+#         print("а сюда походу не доставляется")
 
 
 
