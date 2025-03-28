@@ -39,46 +39,56 @@ choice_of_feed = {
 }
 
 
-connection = sqlite3.connect('users_staff.db')
+connection = sqlite3.connect('users_staff_all.sql')
 c = connection.cursor()
-c.execute("CREATE TABLE IF NOT EXISTS users_fiz(id INTEGER PRIMARY KEY, name_of_organization TEXT, name_of_product TEXT, price INTEGER)")
+c.execute("CREATE TABLE IF NOT EXISTS users_all(id INTEGER PRIMARY KEY, name_of_organization TEXT, name_of_product TEXT, price INTEGER)")
 connection.commit()
 c.close()
 connection.close()
 
-connection = sqlite3.connect('users_staff.db')
-c = connection.cursor()
-c.execute("CREATE TABLE IF NOT EXISTS users_yr(id INTEGER PRIMARY KEY, name_of_organization TEXT, name_of_product TEXT, price INTEGER)")
-connection.commit()
-connection.close()
+@bot.message_handler(commands=['start', 'showmeprice', 'deletefulltable'])
+def price(message, from_callback = False):
+    print("HELP")
+    if message.text == '/start' or from_callback:
+        print(123456789876543)
+        global and_choice, choice_user, choice_tovar, number_of_list
+        and_choice = {}
+        choice_user = None
+        choice_tovar = None
+        number_of_list = None
+        markup = types.InlineKeyboardMarkup()
+        bt1 = types.InlineKeyboardButton('ВАКЦИНА', callback_data = 'vakcina')
+        bt2 = types.InlineKeyboardButton('КОРМА', callback_data = 'korma')
+        bt3 = types.InlineKeyboardButton('ПРЕПАРАТЫ', callback_data = 'preparati')
+        markup.add(bt1, bt2, bt3)
+        bot.send_message(message.chat.id, 'что вы хотите приобрести?', reply_markup=markup)
+    elif message.text == '/showmeprice':
+        print('HUI')
+        connection = sqlite3.connect('users_staff_all.sql')
+        c = connection.cursor()
+        c.execute("SELECT name_of_organization, name_of_product, price FROM users_all")
+        yr_data = c.fetchall()
+        lele = ''
+        for i in yr_data: 
+            name, feed, quanity = i 
+            lele += "Наименование организации: " + str(name) + ", Название препарата: " + str(feed) + ", Количество: " + str(quanity) + "\n"
+        
+        connection.close()
+        bot.send_message(message.chat.id,  lele)
+    elif message.text == '/deletefulltable':
+        print('delete')
+        connection = sqlite3.connect('users_staff_all.sql')
+        c = connection.cursor()
+        c.execute("DELETE FROM users_all")
+        connection.commit()
+        connection.close()
 
-@bot.message_handler(commands=['start'])
-def price(message):
-    global and_choice, all_price, choice_user, choice_tovar, number_of_list, number_of_tovar
-    and_choice = {}
-    all_price = 0
-    choice_user = None
-    choice_tovar = None
-    number_of_list = None
-    number_of_tovar = 0
-    markup = types.InlineKeyboardMarkup()
-    bt1 = types.InlineKeyboardButton('ВАКЦИНА', callback_data = 'vakcina')
-    bt2 = types.InlineKeyboardButton('КОРМА', callback_data = 'korma')
-    bt3 = types.InlineKeyboardButton('ПРЕПАРАТЫ', callback_data = 'preparati')
-    markup.add(bt1, bt2, bt3)
-    bot.send_message(message.chat.id, 'что вы хотите приобрести?', reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call:  True)
 def backhome(call):
-    '''ОБРАБОТКА КОЛЛБЕКОВ КНОПОК ТИПА 
-    ФИЗ ЛИЦО 
-    ЮР ЛИЦО 
-    ДА 
-    ВЕРНУТЬСЯ НАЗАД
-    ДОБАВИТЬ В КОРЗИНУ'''
     global end_choice, all_price, number_of_tovar
     if call.data == 'backhome':
-        price(call.message)
+        price(call.message, from_callback = True)
     elif call.data == 'yes':
         end_choice[choice_tovar] = end_choice.get(choice_tovar, number_of_tovar)
         all_price += number_of_tovar
@@ -86,7 +96,7 @@ def backhome(call):
     elif call.data == 'yes_backhome':
         end_choice[choice_tovar] = end_choice.get(choice_tovar, number_of_tovar)
         all_price += number_of_tovar
-        price(call.message)
+        price(call.message, from_callback = True)
     elif call.data == 'yr_lic':
         print("Кнопка 'yr_lic' была нажата")  # Это поможет отследить вызов функции
         bot.send_message(call.message.chat.id, 'Введите через один пробел Название клиники, номер телефона по типу +79991112233 и Адрес для доставки')
@@ -157,8 +167,10 @@ def quanity_feed(message):
     bot.send_message(message.chat.id, f'введите количество {choice_tovar[2:]}')
     bot.register_next_step_handler(message, end_preparati)
 
-# ДОБАВЛЕНИЕ В БД 
 
+
+# ДОБАВЛЕНИЕ В БД 
+#добавление в корзину проход дальше или к началу
 def end_preparati(message):
     global number_of_tovar
     number_of_tovar = int(message.text)
@@ -170,20 +182,25 @@ def end_preparati(message):
     markup.add(bt2)
     markup.add(bt3)
     bot.send_message(message.chat.id, f'вы выбрали: {choice_tovar[3:]}, количество: {number_of_tovar}, добавить в корзину?', reply_markup=markup)
+#выбор физ или юр лицо
 def fiz_yr(message):
     markup = types.InlineKeyboardMarkup()
     bt1 = types.InlineKeyboardButton('Юр. лицо', callback_data='yr_lic')
     bt2 = types.InlineKeyboardButton('Физ. лицо', callback_data='fiz_lic')
     markup.add(bt1, bt2)
     bot.send_message(message.chat.id, "Укажите кем вы являетесь", reply_markup=markup)
+#добавление в базу данных юр лица
 def join_bd_yr(message): 
     print("Кнопка 'yr_lic' нажимается")  
     global information_yr, all_price, end_choice
-    end_choice_1 = str(end_choice)
+    end_choice_1 = ''
+    for i, e in end_choice.items():
+        end_choice_1 += i[3:] + ": " + str(e) + ','
+
     information_yr = message.text.strip()
-    connection = sqlite3.connect('users_staff.db')
+    connection = sqlite3.connect('users_staff_all.sql')
     c = connection.cursor()
-    c.execute("INSERT INTO users_yr(name_of_organization, name_of_product, price) VALUES (?, ?, ?)", (information_yr, end_choice_1, all_price))
+    c.execute("INSERT INTO users_all(name_of_organization, name_of_product, price) VALUES (?, ?, ?)", (information_yr, end_choice_1, all_price))
     connection.commit()
     c.close()
     connection.close()
@@ -193,24 +210,25 @@ def join_bd_yr(message):
 def show_yr(message):
     print('эта залупа вызывается')
     if message.text == 'да':
-        connection = sqlite3.connect('users_staff.db')
+        connection = sqlite3.connect('users_staff_all.sql')
         c = connection.cursor()
-        c.execute("SELECT * FROM  users_yr")
-        yr_data = c.fetchone()
+        c.execute("SELECT * FROM  users_all")
+        yr_data = c.fetchall()
         illi = "" 
         for i in yr_data:
              illi += str(i) 
         connection.close()
         bot.send_message(message.chat.id, illi)
         print("а сюда походу не доставляется")
+#добавление в базу данных физ лица
 def join_bd_fiz(message):
     print(f"Received data for юр. лицо: {message.text}")  
     global information_yr, all_price, end_choice
     information_yr = message.text.strip()
     end_choice_2 = str(end_choice)
-    connection = sqlite3.connect('users_staff.db')
+    connection = sqlite3.connect('users_staff_all.sql')
     c = connection.cursor()
-    c.execute("INSERT INTO users_fiz(name_of_organization, name_of_product, price) VALUES (?, ?, ?)", (information_yr, end_choice_2, all_price))
+    c.execute("INSERT INTO users_all(name_of_organization, name_of_product, price) VALUES (?, ?, ?)", (information_yr, end_choice_2, all_price))
     connection.commit()
     c.close()
     connection.close()
@@ -220,15 +238,18 @@ def join_bd_fiz(message):
 def show_fiz(message):
     print('эта залупа вызывается')
     if message.text == 'да':
-        connection = sqlite3.connect('users_staff.db')
+        connection = sqlite3.connect('users_staff_all.sql')
         c = connection.cursor()
-        c.execute("SELECT * FROM  users_fiz")
-        yr_data = c.fetchone()
+        c.execute("SELECT * FROM users_fiz")
+        yr_data = c.fetchall()
         illi = "" 
         for i in yr_data:
              illi += str(i) 
         connection.close()
         bot.send_message(message.chat.id, illi)
         print("а сюда походу не доставляется")
+
+
+
 
 bot.polling() 
