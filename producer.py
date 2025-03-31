@@ -2,13 +2,20 @@ import telebot
 import sqlite3 
 from telebot import types
 from io import StringIO 
+import os
+from dotenv import load_dotenv
+from pathlib import Path
+env_path = Path(__file__).parent / 'api.env'
 
+if env_path.exists():
+    print(f"Файл .env найден по пути: {env_path}")
+else:
+    print(f"Файл .env не найден! Ожидаемый путь: {env_path}")
 
+load_dotenv(dotenv_path=env_path)
+BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+bot = telebot.TeleBot(BOT_TOKEN)
 
-
-
-APIBOT = '7973566766:AAFPYQn5qWijn3JepxfWZMvCLpmpenIoi2c' 
-bot = telebot.TeleBot(APIBOT)
 
 
 quanity = 0 #ИНДЕКС СПИСКА ПО КЛЮЧУ В СЛОВАРЕ ВЫБОРА ТОВАРА
@@ -43,7 +50,7 @@ choice_of_preparati = {
     4: ['', '1. Коронакэт 10мг', '2. Коронакэт 30мг'],
     5: ['', '1. Апоквел 5.4мг', '2. Апоквел 16мг'],
     6: ['', '1. Кортавет'],
-    7: ['', '1. Непра'],
+    7: ['', '1. Нептра'],
     8: ['', '1. Отоксолан']
 }
 
@@ -72,17 +79,16 @@ price_for_product = {
 }
 
 price_for_admin = {
-    'Бравекто 2-5': 96.679, 'Бравекто 5-10': 99.649, 'Бравекто 10-20': 107.569, 'Бравекто 20-40': 119.185, 'Бравето 40-56': 132.319,
-    'Симпарика 1-2.5': 80.707, 'Симпарика 2.5-5': 94.974, 'Симпарика 5-10': 98.692, 'Симпарика 10-20': 107.998, 'Симпарика 20-40': 121.682,
-    'Симпарика 40-60': 130.361, 'Нексгард 2-4': 69.839, 'Нексгард 4-10': 76.78, 'Нексгард 10-25': 86.317, 'Нексгард 25-50': 95.777,
-    'Нобивак Dhppi': 26.422, 'Нобивак RL': 18.293, 'Нобивак Lepto': 8.657, 'Нобивак R 1/1': 12.782, 
-    'Нобивак R 1/10': 65.34, 'Нобивак Tricat': 33.561, 'Нобивак KC': 7.6978, 'Нобивак Puppy': 12.023, 'Эурикан Dhppi-L': 28.6, 'Пуревакс RcpCh': 48.18,
-    'Пуревакс Rcp': 35.926, 'Эурикан Rabisin': 12.0, 'Биокан+R': 28.578, 'Биокан': 27.797, 'Биофел': 25.938, 'Биофел+R': 29.645, 'Коронакэт 10мг': 62.7,
-    'Коронакэт 30мг': 107.58, 'Апоквел 5.4мг': 15000.00, 'Апоквел 16мг': 21500.00, 'Кортавет': 39.248, 'Нептра': 1250.0, 'Отоксолан': 32.505,
-    'RC Urinary Cat 85g': 3.762, 'RC Renal Cat 85g': 3.762, 'RC Gastro Cat 85g': 3.762, 'RC Gastro MD Cat 85g': 3.762, 'RC Recovery ': 5.676,
-    'RC Baby Cat 195g': 4.488, 'RC Baby Cat Milk': 56.628, 'RC Gastro Puppy 195g': 5.676, 'RC Gastro Dog 400g': 8.58, 'RC Gastro MD Dog 400g': 8.58,
-    'RC Baby Dog 195g': 4.422, 'RC Baby Dog Milk': 60.918, 'MG Hypo Duck Dog 400g': 7.447, 'MG Gastro Dog 400g': 7.7, 'MG Urinary Cat 100g': 3.102,
-    'MG Sterile Cat 1,5kg': 41.206, 'MG Gastro Dog 2kg': 73.876, 'MG Gastro Puppy 1,5kg': 55.187, 'MG Gastro Cat 1,5kg': 63.58}
+    'Бравекто 2-5': 0, 'Бравекто 5-10': 0, 'Бравекто 10-20': 0, 'Бравекто 20-40': 0, 'Бравето 40-56': 0,
+    'Симпарика 1-2.5': 0, 'Симпарика 2.5-5': 0, 'Симпарика 5-10': 0, 'Симпарика 10-20': 0, 'Симпарика 20-40': 0,
+    'Симпарика 40-60': 0, 'Нексгард 2-4': 0, 'Нексгард 4-10': 0, 'Нексгард 10-25': 0, 'Нексгард 25-50': 0, 'Нобивак Dhppi': 0,
+    'Нобивак RL': 0, 'Нобивак Lepto': 0, 'Нобивак R 1/1': 0, 'Нобивак R 1/10': 0, 'Нобивак Tricat': 0, 'Нобивак KC': 0, 'Нобивак Puppy': 0,
+    'Эурикан Dhppi-L': 0, 'Пуревакс RcpCh': 0, 'Пуревакс Rcp': 0, 'Эурикан Rabisin': 0, 'Биокан+R': 0, 'Биокан': 0, 'Биофел': 0, 'Биофел+R': 0,
+    'Коронакэт 10мг': 0, 'Коронакэт 30мг': 0, 'Апоквел 5.4мг': 0, 'Апоквел 16мг': 0, 'Кортавет': 0, 'Нептра': 0, 'Отоксолан': 0, 'RC Urinary Cat 85g': 0,
+    'RC Renal Cat 85g': 0, 'RC Gastro Cat 85g': 0, 'RC Gastro MD Cat 85g': 0, 'RC Recovery ': 0, 'RC Baby Cat 195g': 0, 
+    'RC Baby Cat Milk': 0, 'RC Gastro Puppy 195g': 0, 'RC Gastro Dog 400g': 0, 'RC Gastro MD Dog 400g': 0, 'RC Baby Dog 195g': 0, 'RC Baby Dog Milk': 0,
+    'MG Hypo Duck Dog 400g': 0, 'MG Gastro Dog 400g': 0, 'MG Urinary Cat 100g': 0, 'MG Sterile Cat 1,5kg': 0, 'MG Gastro Dog 2kg': 0, 'MG Gastro Puppy 1,5kg': 0,
+     'MG Gastro Cat 1,5kg': 0}
 
 connection = sqlite3.connect('user_staff1.sql')
 c = connection.cursor()
@@ -91,47 +97,77 @@ connection.commit()
 c.close()
 connection.close()
 
+def get_main_menu_markup():
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add(types.KeyboardButton('Главное меню'))
+    return markup
+
 @bot.message_handler(commands=['start', 'showmeprice', 'deletefulltable'])
 def price(message, from_callback = False):
     if message.text == '/start' or from_callback:
-        global choice_tovar, number_of_list
+        global choice_tovar, number_of_list, calculation_price_full, calculation_price_oneproduct, all_price, end_choice, result_calculation, zakup, zakup_rus
+        if from_callback == False:
+            calculation_price_full = {}
+            calculation_price_oneproduct = 0
+            all_price = 0
+            end_choice = {}
+            result_calculation = 0
+            zakup = 0
+            zakup_rus = 0
         choice_tovar = None
         number_of_list = None
+        
         markup = types.InlineKeyboardMarkup()
+        
         bt1 = types.InlineKeyboardButton('ВАКЦИНА', callback_data = 'vakcina')
         bt2 = types.InlineKeyboardButton('КОРМА', callback_data = 'korma')
         bt3 = types.InlineKeyboardButton('ПРЕПАРАТЫ', callback_data = 'preparati')
         markup.add(bt1, bt2, bt3)
         bot.send_message(message.chat.id, 'что вы хотите приобрести?', reply_markup=markup)
+    if message.from_user.id == 5401749973 or message.from_user.id ==  1983488938:
+            if message.text == '/showmeprice':
+                exchange_rate = 0.036 # ЦЕНА КУРСА РБ 
+                connection = sqlite3.connect('user_staff1.sql')
+                c = connection.cursor()
+                c.execute("SELECT name_of_organization, name_of_product,  result_calculation_end, admin, admin_rus   FROM user_all1")
 
-    elif message.text == '/showmeprice':
-        exchange_rate = 0.036 # ЦЕНА КУРСА РБ 
-        connection = sqlite3.connect('user_staff1.sql')
-        c = connection.cursor()
-        c.execute("SELECT name_of_organization, name_of_product,  result_calculation_end, admin, admin_rus   FROM user_all1")
+                yr_data = c.fetchall()
+                table_file = ''
+                for i in yr_data: 
+                    name, feed, result, admin, admin_rus = i 
+                    table_file += "\n\n" + '==НАКЛАДНАЯ==============='+ "\n" + "Наименование организации: " + str(name) + "\n" 
+                    table_file += '--------------------------------------------------' + "\n" +'   Добавленные товары:' +  "\n"
+                    table_file += '--------------------------------------------------' +  "\n" + "Добавленные товары: " + '\n'.join(feed.split(',')) + "\n"
+                    table_file += '--------------------------------------------------' + "\n" + '   Общие показатели:' + "\n"
+                    table_file += '--------------------------------------------------' + "\n" + "* Итоговая стоимость: "  + str(result) + ' RUB' + "\n"
+                    table_file += '* Цена закупа  РБ: ' + str(admin) + ' BYN' + "\n"  + '* Цена закупа РФ:  ' + str(round((admin/exchange_rate+admin_rus), 2)) + ' RUB' + "\n" 
+                    table_file += '* Выгода:  ' + str(round((result-(admin/exchange_rate+admin_rus)), 2)) + ' RUB' + "\n"
+                    
+                connection.close()
+                file_data = StringIO(table_file)
+                file_data.name = 'ТАБЛИЦА ЗАКАЗОВ.txt'
+                bot.send_document(message.chat.id,  file_data)
 
-        yr_data = c.fetchall()
-        table_file = ''
-        for i in yr_data: 
-            name, feed, result, admin, admin_rus = i 
-            table_file += "\n\n" + '==НАКЛАДНАЯ==============='+ "\n" + "Наименование организации: " + str(name) + "\n" + '--------------------------------------------------' + "\n" +'   Добавленные товары:' +  "\n" + '--------------------------------------------------' +  "\n" + "Добавленные товары: " + '\n'.join(feed.split(',')) + "\n" + '--------------------------------------------------' + "\n" + '   Общие показатели:' + "\n" + '--------------------------------------------------' + "\n" + "* Итоговая стоимость: "  + str(result) + ' RUB' + "\n" + '* Цена закупа  РБ: ' + str(admin) + ' BYN' + "\n"  + '* Цена закупа РФ:  ' + str(round((admin/exchange_rate+admin_rus), 2)) + ' RUB' + "\n"  + '* Выгода:  ' + str(round((result-(admin/exchange_rate+admin_rus)), 2)) + ' RUB' + "\n"
-            
-        connection.close()
-        file_data = StringIO(table_file)
-        file_data.name = 'ТАБЛИЦА ЗАКАЗОВ.txt'
-        bot.send_document(message.chat.id,  file_data)
-    elif message.text == '/deletefulltable':
-        connection = sqlite3.connect('user_staff1.sql')
-        c = connection.cursor()
-        c.execute("DELETE FROM user_all1")
-        connection.commit()
-        connection.close()
+            elif message.text == '/deletefulltable':
+                connection = sqlite3.connect('user_staff1.sql')
+                c = connection.cursor()
+                c.execute("DELETE FROM user_all1")
+                connection.commit()
+                connection.close()
+
 
 
 @bot.callback_query_handler(func=lambda call:  True)
 def backhome(call):
-    global end_choice, all_price, quanity_of_goods, for_user, last_id
+    global end_choice, all_price, quanity_of_goods, for_user, last_id, number_of_list,  quanity_of_goods, calculation_price_full, result_calculation, calculation_price_oneproduct, choice_tovar, price_for_admin, zakup, for_user, zakup_rus
     if call.data == 'backhome':
+        calculation_price_full = {}
+        calculation_price_oneproduct = 0
+        all_price = 0
+        end_choice = {}
+        result_calculation = 0
+        zakup = 0
+        zakup_rus = 0
         price(call.message, from_callback = True)
     elif call.data == 'yes_next':
         end_choice[choice_tovar] = end_choice.get(choice_tovar, for_user)
@@ -148,12 +184,36 @@ def backhome(call):
         bot.send_message(call.message.chat.id, 'Введите ФИО, номер телефона по типу +79991112233 и Адрес для доставки')
         bot.register_next_step_handler(call.message, join_bd)
     elif call.data == 'vakcina':
+        try:
+            bot.edit_message_reply_markup(
+                chat_id=call.message.chat.id,
+                message_id=call.message.message_id,
+                reply_markup=None  
+            )
+        except:
+            pass
         msg = bot.send_message(call.message.chat.id, f'Введите номер вакцины: \n{'\n'.join(name_of_vakcina)}')
         bot.register_next_step_handler(msg, lambda m: choice_buy(m, category='vakcina'))
     elif call.data == 'preparati':
+        try:
+            bot.edit_message_reply_markup(
+                chat_id=call.message.chat.id,
+                message_id=call.message.message_id,
+                reply_markup=None  
+            )
+        except:
+            pass
         msg = bot.send_message(call.message.chat.id, f'Введите номер препарата: \n{'\n'.join(name_of_preparati)}')
         bot.register_next_step_handler(msg, lambda m: choice_buy(m, category='preparati'))
     elif call.data == 'korma':
+        try:
+            bot.edit_message_reply_markup(
+                chat_id=call.message.chat.id,
+                message_id=call.message.message_id,
+                reply_markup=None  
+            )
+        except:
+            pass
         msg = bot.send_message(call.message.chat.id, f'Введите номер корма: \n{'\n'.join(name_of_feed)}')
         bot.register_next_step_handler(msg, lambda m: choice_buy(m, category='feed'))
     elif call.data == 'end':
@@ -168,9 +228,12 @@ def backhome(call):
         connection.close()
         bot.send_message(call.message.chat.id, f"Все ваши записи удалены, если хотите начать заново, напишите команду {'/start'}")
 
+    
+
 
 def choice_buy(message, category):
 # ОБРАБОТКА КЛЮЧА СЛОВАРЕЙ С ТОВАРАМИ
+    
     global number_of_list
     try:
         if not message.text.strip().isdigit():
@@ -178,40 +241,43 @@ def choice_buy(message, category):
         number_of_list = int(message.text)
 
         if category == 'preparati':
-            if number_of_list not in choice_of_preparati:
+            if number_of_list not in choice_of_preparati or number_of_list < 1:
                 raise IndexError("Неверный номер категории")
-            msg = bot.send_message(message.chat.id, f'введите номер препарата: \n{'\n'.join(choice_of_preparati[number_of_list])}')
-            bot.register_next_step_handler(msg, lambda m: quanity_choice_buy(m, category='preparati'))
+            msg = bot.send_message(message.chat.id, f'введите номер препарата: \n{'\n'.join(choice_of_preparati[number_of_list])}' )
+            bot.register_next_step_handler(msg, lambda m: quanity_choice_buy(m, category='preparati'), )
 
         if category == 'vakcina':
-            if number_of_list not in choice_name_vakcina:
+            if number_of_list not in choice_name_vakcina  or number_of_list < 1:
                 raise IndexError("Неверный номер категории")
-            msg = bot.send_message(message.chat.id, f'введите номер вакцины: \n{'\n'.join(choice_name_vakcina[number_of_list])}')
+            msg = bot.send_message(message.chat.id, f'введите номер вакцины: \n{'\n'.join(choice_name_vakcina[number_of_list])}' )
             bot.register_next_step_handler(msg, lambda m: quanity_choice_buy(m, category='vakcina'))
 
         if category == 'feed':
-            if number_of_list not in choice_of_feed:
+            if number_of_list not in choice_of_feed  or number_of_list < 1:
                 raise IndexError("Неверный номер категории")
-            msg = bot.send_message(message.chat.id, f'введите номер корма: \n{'\n'.join(choice_of_feed[number_of_list])}')
+            msg = bot.send_message(message.chat.id, f'введите номер корма: \n{'\n'.join(choice_of_feed[number_of_list])}' )
             bot.register_next_step_handler(msg, lambda m: quanity_choice_buy(m, category='feed'))
 
 
     except ValueError as e:
         msg = bot.send_message(
             message.chat.id,
-            "⚠️ Неверно. Попробуйте еще раз: {e}"
+            f"⚠️ Неверно. Попробуйте еще раз: {e}"
         )
         bot.register_next_step_handler(msg, lambda m: choice_buy(m, category))
     except IndexError as e:
         msg = bot.send_message(
             message.chat.id,
-            "⚠️ Неверно. Попробуйте еще раз: {e}"
+            f"⚠️ Неверно. Попробуйте еще раз: {e}"
         )
         bot.register_next_step_handler(msg, lambda m: choice_buy(m, category))
         
 def quanity_choice_buy(message, category):
 # ОБРАБОТКА ЗНАЧЕНИЙ ПО КЛЮЧУ ИЗ СЛОВАРЯ С ТОВАРАМИ
     global number_of_list, choice_tovar
+    markup_menu = types.InlineKeyboardMarkup()
+    bt1 = types.InlineKeyboardButton('В главное меню', callback_data='menu')
+    markup_menu.add(bt1)
     try:
         
         if not message.text.strip().isdigit():
@@ -219,36 +285,36 @@ def quanity_choice_buy(message, category):
         quanity = int(message.text)
 
         if category == 'preparati':
-            if choice_of_preparati[number_of_list][quanity] not in choice_of_preparati[number_of_list]:
+            if choice_of_preparati[number_of_list][quanity] not in choice_of_preparati[number_of_list]  or quanity < 1:
                 raise IndexError('Неверный номер категории')
             choice_tovar = choice_of_preparati[number_of_list][quanity]
-            msg = bot.send_message(message.chat.id, f'Введите количество {choice_tovar[2:]}')
+            msg = bot.send_message(message.chat.id, f'Введите количество {choice_tovar[2:]}' )
             bot.register_next_step_handler(msg, quanity_goods)
             
         if category == 'vakcina':
-            if choice_name_vakcina[number_of_list][quanity] not in choice_name_vakcina[number_of_list]:
+            if choice_name_vakcina[number_of_list][quanity] not in choice_name_vakcina[number_of_list] or quanity < 1:
                 raise IndexError('Неверный номер категории')
             choice_tovar = choice_name_vakcina[number_of_list][quanity]
-            msg = bot.send_message(message.chat.id, f'Введите количество {choice_tovar[2:]}')
+            msg = bot.send_message(message.chat.id, f'Введите количество {choice_tovar[2:]}' )
             bot.register_next_step_handler(msg, quanity_goods)
 
         if category == 'feed':
-            if choice_of_feed[number_of_list][quanity] not in choice_of_feed[number_of_list]:
+            if choice_of_feed[number_of_list][quanity] not in choice_of_feed[number_of_list] or quanity < 1:
                 raise IndexError('Неверный номер категории')
             choice_tovar = choice_of_feed[number_of_list][quanity]
-            msg = bot.send_message(message.chat.id, f'Введите количество {choice_tovar[2:]}')
+            msg = bot.send_message(message.chat.id, f'Введите количество {choice_tovar[2:]}' )
             bot.register_next_step_handler(msg, quanity_goods)
 
     except ValueError as e:
         msg = bot.send_message(
             message.chat.id,
-            "⚠️ Неверно. Попробуйте еще раз:{e}"
+            f"⚠️ Неверно. Попробуйте еще раз:{e}"
         )
         bot.register_next_step_handler(msg, lambda m: quanity_choice_buy(m, category))
     except IndexError as e:
         msg = bot.send_message(
             message.chat.id,
-            "⚠️ Неверно. Попробуйте еще раз:{e}"
+           f"⚠️ Неверно. Попробуйте еще раз:{e}"
         )
         bot.register_next_step_handler(msg, lambda m: quanity_choice_buy(m, category))
 
@@ -259,13 +325,16 @@ def quanity_choice_buy(message, category):
 
 def quanity_goods(message):
 # ВВОД КОЛИЧЕСТВА ТОВАРА И ДОБАВЛЕНИЕ В КОРЗИНУ
-    global quanity_of_goods, calculation_price_full, result_calculation, calculation_price_oneproduct, choice_tovar, price_for_admin, exchange_rate, zakup, for_user, zakup_rus
+    global quanity_of_goods, calculation_price_full, result_calculation, calculation_price_oneproduct, choice_tovar, price_for_admin, zakup, for_user, zakup_rus
     try:
-        if not message.text.strip().isdigit(): 
-            raise ValueError()
+        if not message.text.strip().isdigit() and message.text: 
+            raise ValueError("Введите количество цифрой")
+        if int(message.text) > 1000:
+            raise ValueError('Слишком большое значение')
     except ValueError as e:
-        msg = bot.send_message(message.caht.id, f"⚠️ Неверно. Попробуйте еще раз: {e}")
+        msg = bot.send_message(message.chat.id, f"⚠️ Неверно. Попробуйте еще раз: {e}")
         bot.register_next_step_handler(msg, quanity_goods)
+        return
 
     quanity_of_goods = int(message.text)
     if choice_tovar[3:] != "Апоквел 5.4мг" and choice_tovar[3:] !=  "Апоквел 16мг" and choice_tovar[3:] != "Нептра": 
@@ -293,7 +362,7 @@ def quanity_goods(message):
     markup.add(bt1)
     markup.add(bt2)
     markup.add(bt3)
-    bot.send_message(message.chat.id, f'Вы выбрали: \n* {choice_tovar[3:]}, количество: {quanity_of_goods} \n$ Стоимость: {calculation_price_oneproduct} RUB \nОставить в корзине? \n\nКорзина: \n{basket} \nОбщая сумма корзины: {total_amount} RUB', reply_markup=markup)
+    bot.send_message(message.chat.id, f'Вы выбрали: \n{choice_tovar[3:]}, количество: {quanity_of_goods} \nСтоимость: {calculation_price_oneproduct} RUB \nОставить в корзине? \n\nКорзина: \n{basket} \nОбщая сумма корзины: {total_amount} RUB', reply_markup=markup)
 
 def fiz_yr(message):
     markup = types.InlineKeyboardMarkup()
