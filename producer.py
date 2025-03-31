@@ -124,7 +124,7 @@ def price(message, from_callback = False):
         bt3 = types.InlineKeyboardButton('ПРЕПАРАТЫ', callback_data = 'preparati')
         markup.add(bt1, bt2, bt3)
         bot.send_message(message.chat.id, 'что вы хотите приобрести?', reply_markup=markup)
-    if message.from_user.id == 5401749973 or message.from_user.id ==  1983488938:
+    if message.from_user.id in ADMIN:
             if message.text == '/showmeprice':
                 exchange_rate = 0.036 # ЦЕНА КУРСА РБ 
                 connection = sqlite3.connect('user_staff1.sql')
